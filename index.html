@@ -5,101 +5,214 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SILZO | Digital Services</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#080d18;color:#fff}
-header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #202a3c}
-.logo{font-size:25px;font-weight:900;color:#ffcc25;letter-spacing:2px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#080d18;color:white}
+header{padding:20px 6%;border-bottom:1px solid #25344b}
+.logo{font-size:27px;font-weight:900;color:#ffcc25;letter-spacing:2px}
 .logo span{color:white}
-.menu{color:#ffcc25;font-size:14px}
-.container{max-width:1100px;margin:auto;padding:30px 6%}
-.welcome{margin-bottom:25px}
-.welcome h1{font-size:27px;margin-bottom:8px}
-.welcome p{color:#9ba8ba;font-size:14px}
-.wallet{background:linear-gradient(120deg,#172c49,#101b2e);border:1px solid #34445c;border-radius:18px;padding:25px;margin-bottom:30px}
-.wallet-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-.wallet-top p{color:#aebbd0;font-size:14px}
-.demo{font-size:10px;background:#443918;color:#ffda54;padding:6px 10px;border-radius:20px}
-.balance{font-size:32px;font-weight:bold;margin-bottom:20px;color:#ffcc25}
-.actions{display:flex;gap:12px;flex-wrap:wrap}
-.btn{border:0;border-radius:9px;padding:12px 18px;font-weight:bold;cursor:pointer}
-.primary{background:#ffcc25;color:#111}
-.secondary{background:#263750;color:white}
-.section-title{font-size:19px;margin-bottom:17px}
-.services{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px}
-.service{background:#111b2b;border:1px solid #25344b;border-radius:14px;padding:20px 12px;text-align:center;cursor:pointer}
-.service .emoji{font-size:27px;margin-bottom:12px}
-.service h3{font-size:14px;margin-bottom:6px}
-.service p{font-size:11px;color:#9ba8ba}
-.service:hover{border-color:#ffcc25}
-.transaction{background:#111b2b;border:1px solid #25344b;padding:17px;border-radius:12px;color:#9ba8ba;font-size:13px;line-height:1.6}
-footer{text-align:center;padding:30px 10px;color:#75849b;font-size:12px}
-@media(max-width:500px){.services{grid-template-columns:repeat(2,1fr)}.welcome h1{font-size:23px}}
+.container{max-width:850px;margin:auto;padding:30px 6%}
+h1{font-size:26px;margin-bottom:10px}
+.muted{color:#aab6c8;font-size:14px;line-height:1.6}
+.panel{background:#111b2b;border:1px solid #293951;border-radius:15px;padding:22px;margin:22px 0}
+input{width:100%;padding:14px;margin:8px 0 14px;background:#080d18;border:1px solid #34445c;border-radius:8px;color:white;font-size:15px}
+label{font-size:13px;color:#cbd5e1}
+button{padding:13px 17px;border:0;border-radius:8px;background:#ffcc25;color:#111;font-weight:bold;cursor:pointer;margin:5px 5px 5px 0}
+.secondary{background:#293951;color:white}
+.hidden{display:none}
+.message{font-size:13px;color:#ffcc25;margin-top:12px;line-height:1.5}
+.wallet{background:linear-gradient(120deg,#172c49,#101b2e);border:1px solid #34445c;border-radius:15px;padding:23px;margin:22px 0}
+.balance{font-size:32px;color:#ffcc25;font-weight:bold;margin:15px 0}
+.services{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:20px 0}
+.service{background:#111b2b;border:1px solid #293951;border-radius:12px;padding:20px 10px;text-align:center}
+.service b{display:block;margin:8px 0;font-size:14px}
+.service small{color:#aab6c8}
+.transaction{background:#111b2b;padding:15px;border-radius:10px;margin:10px 0;font-size:13px;color:#aab6c8}
+footer{text-align:center;padding:30px;color:#75849b;font-size:12px}
 </style>
 </head>
 <body>
 
-<header>
-<div class="logo">SIL<span>ZO</span></div>
-<div class="menu">DIGITAL SERVICES</div>
-</header>
+<header><div class="logo">SIL<span>ZO</span></div></header>
 
 <main class="container">
-<div class="welcome">
+<section id="auth">
 <h1>Welcome to SILZO 👋</h1>
-<p>Your digital services, all in one place.</p>
+<p class="muted">Create an account or log in to access your digital services.</p>
+
+<div class="panel">
+<h2>Create Account</h2><br>
+<label>Full name</label>
+<input id="name" type="text" placeholder="Enter your full name">
+<label>Email address</label>
+<input id="signupEmail" type="email" placeholder="Enter your email">
+<label>Password</label>
+<input id="signupPassword" type="password" placeholder="Create a password">
+<button onclick="signUp()">Create Account</button>
 </div>
 
-<section class="wallet">
-<div class="wallet-top">
-<p>MY WALLET</p>
-<span class="demo">DEMO BALANCE</span>
+<div class="panel">
+<h2>Already have an account?</h2><br>
+<label>Email address</label>
+<input id="loginEmail" type="email" placeholder="Enter your email">
+<label>Password</label>
+<input id="loginPassword" type="password" placeholder="Enter your password">
+<button onclick="logIn()">Log In</button>
 </div>
-<div class="balance">₦0.00</div>
-<div class="actions">
-<button class="btn primary" onclick="demo()">+ Fund Wallet</button>
-<button class="btn secondary" onclick="demo()">Transaction History</button>
-</div>
+<p id="authMessage" class="message"></p>
 </section>
 
-<h2 class="section-title">Our Services</h2>
-<section class="services">
-<div class="service" onclick="demo()">
-<div class="emoji">📶</div><h3>Buy Data</h3><p>Affordable data bundles</p>
-</div>
-<div class="service" onclick="demo()">
-<div class="emoji">📱</div><h3>Airtime</h3><p>All major networks</p>
-</div>
-<div class="service" onclick="demo()">
-<div class="emoji">🎓</div><h3>Exam Pins</h3><p>WAEC, NECO, JAMB</p>
-</div>
-<div class="service" onclick="demo()">
-<div class="emoji">📺</div><h3>Cable TV</h3><p>TV subscriptions</p>
-</div>
-<div class="service" onclick="demo()">
-<div class="emoji">💡</div><h3>Electricity</h3><p>Pay electricity bills</p>
-</div>
-<div class="service" onclick="demo()">
-<div class="emoji">⚽</div><h3>Betting Wallet</h3><p>Supported platforms</p>
-</div>
-</section>
+<section id="dashboard" class="hidden">
+<h1>Welcome to SILZO 👋</h1>
+<p class="muted">Your digital services, all in one place.</p>
 
-<h2 class="section-title">Recent Transactions</h2>
-<div class="transaction">
-No transactions yet.<br>
-Your transactions will appear here when you start using SILZO.
+<div class="wallet">
+<p class="muted">MY WALLET</p>
+<div class="balance" id="balance">₦0.00</div>
+<p class="muted">Wallet balance</p>
+<button onclick="alert('Wallet funding is not connected yet. No payment has been made.')">+ Fund Wallet</button>
+<button class="secondary" onclick="logOut()">Log Out</button>
 </div>
+
+<h2>Our Services</h2>
+<div class="services">
+<div class="service">📶<b>Buy Data</b><small>Data bundles</small></div>
+<div class="service">📱<b>Airtime</b><small>All networks</small></div>
+<div class="service">🎓<b>Exam Pins</b><small>WAEC, NECO, JAMB</small></div>
+<div class="service">📺<b>Cable TV</b><small>Subscriptions</small></div>
+<div class="service">💡<b>Electricity</b><small>Pay bills</small></div>
+<div class="service">⚽<b>Betting Wallet</b><small>Supported platforms</small></div>
+</div>
+
+<h2>Recent Transactions</h2>
+<div id="transactions" class="transaction">No transactions yet.</div>
+<p class="message">Purchases and wallet funding are not active yet.</p>
+</section>
 </main>
 
-<footer>
-<p>© 2026 SILZO Digital Services</p>
-<p>Digital made simple.</p>
-</footer>
+<footer>© 2026 SILZO Digital Services</footer>
 
 <script>
-function demo(){
-alert("Welcome to SILZO! This feature is currently being set up. No payment or purchase has been made.");
+const SUPABASE_URL = "https://znwddvafgoaxzuoktbup.supabase.co";
+const SUPABASE_KEY = "sb_publishable_tzkRrQtN2Qn5j1qkwW465A_lDrwzzOJ";
+
+const client = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+function showMessage(message){
+  document.getElementById("authMessage").textContent = message;
 }
+
+async function signUp(){
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
+
+  if(!name || !email || !password){
+    showMessage("Please fill in all registration fields.");
+    return;
+  }
+
+  if(password.length < 8){
+    showMessage("Your password must be at least 8 characters.");
+    return;
+  }
+
+  showMessage("Creating your account...");
+
+  const {data,error} = await client.auth.signUp({
+    email,
+    password,
+    options:{data:{full_name:name}}
+  });
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  if(data.session){
+    showMessage("Account created successfully!");
+    await loadDashboard(data.session);
+  }else{
+    showMessage("Registration received! Check your email and confirm your address before logging in.");
+  }
+}
+
+async function logIn(){
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if(!email || !password){
+    showMessage("Enter your email and password.");
+    return;
+  }
+
+  showMessage("Logging in...");
+
+  const {data,error} = await client.auth.signInWithPassword({
+    email,password
+  });
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  await loadDashboard(data.session);
+}
+
+async function loadDashboard(session){
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+
+  const {data:wallet,error} = await client
+    .from("wallets")
+    .select("balance")
+    .eq("user_id",session.user.id)
+    .single();
+
+  if(error){
+    document.getElementById("balance").textContent = "Unavailable";
+  }else{
+    document.getElementById("balance").textContent =
+      "₦" + Number(wallet.balance).toLocaleString("en-NG",{minimumFractionDigits:2});
+  }
+
+  const {data:items} = await client
+    .from("transactions")
+    .select("type,amount,status,description,created_at")
+    .eq("user_id",session.user.id)
+    .order("created_at",{ascending:false})
+    .limit(5);
+
+  const area = document.getElementById("transactions");
+  if(!items || items.length === 0){
+    area.textContent = "No transactions yet.";
+  }else{
+    area.innerHTML = "";
+    items.forEach(item=>{
+      const line = document.createElement("p");
+      line.textContent = item.type + " — ₦" +
+        Number(item.amount).toFixed(2) + " — " + item.status;
+      area.appendChild(line);
+    });
+  }
+}
+
+async function logOut(){
+  await client.auth.signOut();
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("auth").classList.remove("hidden");
+  showMessage("You have logged out.");
+}
+
+client.auth.getSession().then(({data})=>{
+  if(data.session) loadDashboard(data.session);
+});
 </script>
 </body>
 </html>
